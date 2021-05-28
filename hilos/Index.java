@@ -9,7 +9,7 @@ import java.awt.geom.*;
  */
 public class Index {
 
-    public Index() {
+    public Index() throws InterruptedException, AWTException {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -22,13 +22,15 @@ public class Index {
 
                 JFrame frame = new JFrame("Testing");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.add(new ImagePane());
+                ImagePane img = new ImagePane();
+                frame.add(img);
                 JLabel label = new JLabel();
                 label.add(new Draw());
                 frame.add(label);
                 frame.pack();
                 frame.setBounds(0, 0, 900, 600);
                 frame.setLocationRelativeTo(null);
+                frame.setResizable(false);
                 frame.setVisible(true);
             }
         });
@@ -41,7 +43,7 @@ public class Index {
 
         public Draw() {
             setBounds(440, 110, 400, 400);
-            System.out.println(getSize());
+
             MouseAdapter ma = new MouseAdapter() {
                 public void mousePressed(MouseEvent e) { // cuando se presiona el mouse
                     inicioArrastre = new Point(e.getX(), e.getY());
@@ -83,46 +85,9 @@ public class Index {
 
     public class ImagePane extends JPanel {
 
-        private ImageIcon img;
-
-        private Point offset = new Point(0, 0);
-
         public ImagePane() {
             setBounds(10, 100, 300, 450);
-            /* setBounds(400, 200, 300, 450);
-            img = new ImageIcon(getClass().getResource("/image.jpg"));
-
-            MouseAdapter ma = new MouseAdapter() {
-
-                private Point startPoint;
-
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    startPoint = e.getPoint();
-                    startPoint.x -= offset.x;
-                    startPoint.y -= offset.y;
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-                    startPoint = null;
-                }
-
-                @Override
-                public void mouseDragged(MouseEvent e) {
-                    Point p = e.getPoint();
-                    int x = p.x - startPoint.x;
-                    int y = p.y - startPoint.x;
-                    offset = new Point(x, y);
-                    repaint();
-                }
-
-            };
-
-            addMouseListener(ma);
-            addMouseMotionListener(ma); */
             this.setSize(new Dimension(400, 400));
-
         }
 
         @Override
@@ -135,7 +100,10 @@ public class Index {
             Dimension height = getSize();
             ImageIcon Img = new ImageIcon(getClass().getResource("/image.jpg"));
 
+            
             g.drawImage(Img.getImage(), 10, 10, height.width, height.height, null);
+            g.fillRect(10, 10, 400, 300);
+            g.drawString("Game Over", 10, 10);
 
             setOpaque(false);
             super.paintComponent(g);
@@ -143,7 +111,9 @@ public class Index {
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException, AWTException {
+        Robot robot = new Robot();
+        robot.mouseMove(675, 224);
         new Index();
     }
 }
